@@ -3,10 +3,10 @@ package vendingmachine.ui;
 import vendingmachine.dto.VendingItem;
 import vendingmachine.dto.VendingMachine;
 
-public class VendingMachineView {
+public class VendingMachineConsoleView {
     private UserIO io;
 
-    public VendingMachineView(UserIO io) {
+    public VendingMachineConsoleView(UserIO io) {
         this.io = io;
     }
 
@@ -17,7 +17,8 @@ public class VendingMachineView {
         this.printVendingMachineInventory(vendingMachine);
         io.println("1. Make Purchase");
         io.println("2. Add balance");
-        return io.readIntSelection("Please select from above options", 1, 2);
+        io.println("3. Quit");
+        return io.readIntSelection("Please select from above options ", 1, 2);
     }
 
     // Prints out the stock of the vending machine

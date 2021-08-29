@@ -23,13 +23,15 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
     }
 
     @Override
-    public void makePurchase(String itemName, int quantity) {
+    public void makePurchase(String itemName, int quantity) throws FileLoadingWritingException{
+        loadVendingMachine();
         VendingItem itemToBuy = vendingMachine.getInventory().get(itemName);
         // Reduce quantity from the vending machine
         itemToBuy.setQuantity(itemToBuy.getQuantity() - quantity);
         // Deduct cost from user balance
         BigDecimal cost = itemToBuy.getCost().multiply(new BigDecimal(quantity));
         vendingMachine.setUserBalance(vendingMachine.getUserBalance().subtract(cost));
+        saveVendingMachine();
     }
 
     @Override
@@ -38,8 +40,17 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
     }
 
     @Override
-    public void addBalance(String addition) {
+    public void addBalance(String addition) throws FileLoadingWritingException {
+        loadVendingMachine();
         this.vendingMachine.setUserBalance(this.vendingMachine.getUserBalance().add(new BigDecimal(addition)));
+        saveVendingMachine();
+    }
+
+    @Override
+    public void setBalance(String balance) throws FileLoadingWritingException {
+        loadVendingMachine();
+        this.vendingMachine.setUserBalance(new BigDecimal(balance));
+        saveVendingMachine();
     }
 
     public VendingMachine getVendingMachine() {

@@ -34,4 +34,9 @@ public class UserIOConsoleImplementation implements UserIO{
         }
     }
 
+    @Override
+    public void anyInputToContinue() {
+        this.readNextInput("Enter any input to continue...");
+    }
+
 }

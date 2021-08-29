@@ -1,16 +1,17 @@
 package vendingmachine.controller;
 
+import vendingmachine.dao.FileLoadingWritingException;
 import vendingmachine.servicelayer.VendingMachineServiceLayer;
 import vendingmachine.ui.UserIO;
 import vendingmachine.ui.UserIOConsoleImplementation;
-import vendingmachine.ui.VendingMachineView;
+import vendingmachine.ui.VendingMachineConsoleView;
 
 public class VendingMachineController {
     private UserIO io = new UserIOConsoleImplementation();
-    private VendingMachineView view;
+    private VendingMachineConsoleView view;
     private VendingMachineServiceLayer serviceLayer;
 
-    public VendingMachineController(VendingMachineView view, VendingMachineServiceLayer servicelayer) {
+    public VendingMachineController(VendingMachineConsoleView view, VendingMachineServiceLayer servicelayer) {
         this.view = view;
         this.serviceLayer = servicelayer;
     }
@@ -23,16 +24,64 @@ public class VendingMachineController {
             while(keepGoing) {
                 menuSelection = view.printHomeMenuAndGetSelection(serviceLayer.getVendingMachine());
                 switch(menuSelection) {
+                    case 1:
+                        this.makePurchase();
+                        break;
+                    case 2:
+                        this.addBalance();
+                        break;
+                    case 3:
+                        this.handleQuit();
+                        keepGoing = false;
+                        break;
                     default:
-                        this.printInvalidSelection();
+                        this.displayError("Invalid selection");
                 }
             }
         } catch (Exception e) {
-
+            this.displayError(e.getMessage());
         }
     }
 
-    private void printInvalidSelection() {
-        io.println("Invalid selection");
+    private void makePurchase() {
+        try {
+            String itemToBuyName = io.readNextInput("Please enter the name of the item you wish to purchase:");
+            int quantity = Integer.parseInt(io.readNextInput("Please enter the quantity you wish to purchase: "));
+            serviceLayer.makePurchase(itemToBuyName, quantity);
+        } catch (Exception e) {
+            this.displayError(e.getMessage());
+        } finally {
+            io.anyInputToContinue();
+        }
+    }
+
+    private void addBalance() {
+        try {
+            String addedBalance = io.readNextInput("Please enter how much you would like to deposit: ");
+            serviceLayer.addBalance(addedBalance);
+        } catch (Exception e) {
+            displayError(e.getMessage());
+        } finally {
+            io.anyInputToContinue();
+        }
+    }
+
+    private void handleQuit() throws FileLoadingWritingException {
+        io.println("Making Change...");
+        int[] change = serviceLayer.makeChange();
+        int pennies = change[0];
+        int nickels = change[1];
+        int dimes = change[2];
+        int quarters = change[3];
+        io.println("Change received: ");
+        io.println(quarters + " quarters");
+        io.println(dimes + " dimes");
+        io.println(nickels + " nickels");
+        io.println(pennies + " pennies");
+        io.println("Thank you for shopping at the vending machine!");
+        io.anyInputToContinue();
+    }
+    private void displayError(String errorMessage) {
+        io.println("Error: " + errorMessage);
     }
 }

@@ -10,12 +10,14 @@ public interface VendingMachineDao {
     public void addItem(VendingItem item);
 
     // Make a purchase
-    public void makePurchase(String itemName, int quantity);
+    public void makePurchase(String itemName, int quantity) throws FileLoadingWritingException;
 
     public Map<String, VendingItem> getInventory();
 
-    public void addBalance(String addition);
+    public void addBalance(String addition) throws FileLoadingWritingException;
 
     public VendingMachine getVendingMachine();
+
+    public void setBalance(String balance) throws FileLoadingWritingException;
 
 }

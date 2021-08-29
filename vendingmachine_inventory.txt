@@ -1,2 +1,5 @@
-5
-Reese's Cup::1.50::10
+0.00
+Reese's Cup::1.50::7
+Oh Henry::1.75::14
+Flaming Hot Cheetos::2.25::17
+Doritos::2.00::4
