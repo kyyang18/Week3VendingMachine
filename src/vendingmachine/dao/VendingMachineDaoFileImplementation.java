@@ -13,20 +13,23 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
 
     private VendingMachine vendingMachine;
 
+    public VendingMachineDaoFileImplementation() throws FileLoadingWritingException{
+        this.loadVendingMachine();
+    }
+
     @Override
     public void addItem(VendingItem item) {
         this.vendingMachine.getInventory().put(item.getName(), item);
     }
 
     @Override
-    public void makePurchase(String itemName, int quantity) throws ItemNotFoundException,
-            ItemOutOfStockException, InsufficientFundsException{
+    public void makePurchase(String itemName, int quantity) {
         VendingItem itemToBuy = vendingMachine.getInventory().get(itemName);
-        if (itemToBuy == null) {
-            throw new ItemNotFoundException("Item not available");
-        } else if (itemToBuy.getQuantity() == 0) {
-            throw new ItemOutOfStockException("Item out of stock");
-        }
+        // Reduce quantity from the vending machine
+        itemToBuy.setQuantity(itemToBuy.getQuantity() - quantity);
+        // Deduct cost from user balance
+        BigDecimal cost = itemToBuy.getCost().multiply(new BigDecimal(quantity));
+        vendingMachine.setUserBalance(vendingMachine.getUserBalance().subtract(cost));
     }
 
     @Override

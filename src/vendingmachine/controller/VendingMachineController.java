@@ -1,6 +1,6 @@
 package vendingmachine.controller;
 
-import vendingmachine.dao.VendingMachineDao;
+import vendingmachine.servicelayer.VendingMachineServiceLayer;
 import vendingmachine.ui.UserIO;
 import vendingmachine.ui.UserIOConsoleImplementation;
 import vendingmachine.ui.VendingMachineView;
@@ -8,11 +8,11 @@ import vendingmachine.ui.VendingMachineView;
 public class VendingMachineController {
     private UserIO io = new UserIOConsoleImplementation();
     private VendingMachineView view;
-    private VendingMachineDao dao;
+    private VendingMachineServiceLayer serviceLayer;
 
-    public VendingMachineController(VendingMachineView view, VendingMachineDao dao) {
+    public VendingMachineController(VendingMachineView view, VendingMachineServiceLayer servicelayer) {
         this.view = view;
-        this.dao = dao;
+        this.serviceLayer = servicelayer;
     }
 
     public void run() {
@@ -21,7 +21,7 @@ public class VendingMachineController {
 
         try {
             while(keepGoing) {
-                menuSelection = view.printHomeMenuAndGetSelection(dao.getVendingMachine());
+                menuSelection = view.printHomeMenuAndGetSelection(serviceLayer.getVendingMachine());
                 switch(menuSelection) {
                     default:
                         this.printInvalidSelection();

@@ -10,8 +10,7 @@ public interface VendingMachineDao {
     public void addItem(VendingItem item);
 
     // Make a purchase
-    public void makePurchase(String itemName, int quantity) throws ItemNotFoundException,
-            ItemOutOfStockException, InsufficientFundsException;
+    public void makePurchase(String itemName, int quantity);
 
     public Map<String, VendingItem> getInventory();
 

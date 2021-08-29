@@ -1,16 +1,20 @@
 import vendingmachine.controller.VendingMachineController;
-import vendingmachine.dao.VendingMachineDao;
-import vendingmachine.dao.VendingMachineDaoFileImplementation;
+import vendingmachine.servicelayer.VendingMachineServiceLayer;
+import vendingmachine.servicelayer.VendingMachineServiceLayerFileImplementation;
 import vendingmachine.ui.UserIO;
 import vendingmachine.ui.UserIOConsoleImplementation;
 import vendingmachine.ui.VendingMachineView;
 
 public class App {
     public static void main(String[] args) {
-        UserIO io = new UserIOConsoleImplementation();
-        VendingMachineView view = new VendingMachineView(io);
-        VendingMachineDao dao = new VendingMachineDaoFileImplementation();
-        VendingMachineController controller = new VendingMachineController(view, dao);
-        controller.run();
+        try {
+            UserIO io = new UserIOConsoleImplementation();
+            VendingMachineView view = new VendingMachineView(io);
+            VendingMachineServiceLayer serviceLayer = new VendingMachineServiceLayerFileImplementation();
+            VendingMachineController controller = new VendingMachineController(view, serviceLayer);
+            controller.run();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }
