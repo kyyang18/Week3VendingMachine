@@ -13,15 +13,19 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
 
     private VendingMachine vendingMachine;
 
+    // Constructor loads VendingMachine object from file
     public VendingMachineDaoFileImplementation() throws FileLoadingWritingException{
         this.loadVendingMachine();
     }
 
+    // Add an item to the vending machine's inventory
     @Override
     public void addItem(VendingItem item) {
         this.vendingMachine.getInventory().put(item.getName(), item);
     }
 
+    // Make a purchase by finding the item in the vending machine's inventory with the matching itemName, and then
+    // deducting from its quantity while deducting the total cost from the user's balance
     @Override
     public void makePurchase(String itemName, int quantity) throws FileLoadingWritingException{
         loadVendingMachine();
@@ -34,11 +38,13 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
         saveVendingMachine();
     }
 
+    // Returns the inventory of the vending machine
     @Override
     public Map<String, VendingItem> getInventory() {
         return this.vendingMachine.getInventory();
     }
 
+    // Update vendingMachine from file, increase userBalance by amount, and then save the updated vendingMachine object
     @Override
     public void addBalance(String addition) throws FileLoadingWritingException {
         loadVendingMachine();
@@ -46,6 +52,7 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
         saveVendingMachine();
     }
 
+    // Update vendingMachine from file, set userBalance to balance, and then save the updated vendingMachine object
     @Override
     public void setBalance(String balance) throws FileLoadingWritingException {
         loadVendingMachine();
@@ -53,10 +60,12 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
         saveVendingMachine();
     }
 
+    // Getter for vendingMachine
     public VendingMachine getVendingMachine() {
         return this.vendingMachine;
     }
 
+    // Loads vendingMachine from a text file
     public void loadVendingMachine() throws FileLoadingWritingException{
         Scanner scanner;
 
@@ -81,6 +90,7 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
         }
     }
 
+    // Creates a VendingItem object from a string representation
     public VendingItem unmarshallVendingItem(String input) {
         // Split input string
         // Format:
@@ -92,6 +102,7 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
         return new VendingItem(name, cost, quantity);
     }
 
+    // Saves vendingMachine to a text file
     public void saveVendingMachine() throws FileLoadingWritingException {
         PrintWriter printer;
 
@@ -111,6 +122,7 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
         }
     }
 
+    // Converts a VendingItem object to a string representation
     public String marshallVendingItem(VendingItem item) {
         String itemAsText = item.getName() + DELIMITER;
         itemAsText += item.getCost().toString() + DELIMITER;
@@ -118,6 +130,7 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
         return itemAsText;
     }
 
+    // Returns vendingMachine's inventory of VendingItems
     public List<VendingItem> getAllVendingItems() {
         return new ArrayList<>(this.vendingMachine.getInventory().values());
     }

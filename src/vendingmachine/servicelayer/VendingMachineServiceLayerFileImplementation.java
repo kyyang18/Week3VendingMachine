@@ -12,7 +12,7 @@ import java.util.Map;
 public class VendingMachineServiceLayerFileImplementation implements VendingMachineServiceLayer {
     private VendingMachineDao dao;
     private AuditLog auditLog;
-    private LocalDateTime ld;
+    private LocalDateTime ld; // Used to log the time each auditLog entry was performed
 
     private final int GREATER_THAN = 1;
     private final int LESS_THAN = -1;
@@ -24,11 +24,19 @@ public class VendingMachineServiceLayerFileImplementation implements VendingMach
     }
 
     @Override
+    // Pass-through method for adding an item to the vending machine's inventory
     public void addItem(VendingItem item) {
         this.dao.addItem(item);
     }
 
     @Override
+    // Make a purchase, only performing transaction if the item exists, is in stock, and the user has enough
+    // money to perform the transaction
+    // Throws the following exceptions:
+    //      - ItemNotFoundException if the item is not present in the vending machine's inventory
+    //      - ItemOutOfStockException if the item's quantity is insufficient for the user's request
+    //      - InsufficientFundsException if the user lacks the balance necessary for the transaction
+    //      - FileLoadingWritingException if there is an error loading/saving the vending machine's state to a file
     public void makePurchase(String itemName, int quantity) throws ItemNotFoundException,
             ItemOutOfStockException, InsufficientFundsException, FileLoadingWritingException {
         VendingItem itemToBuy = dao.getInventory().get(itemName);
@@ -56,11 +64,15 @@ public class VendingMachineServiceLayerFileImplementation implements VendingMach
         }
     }
 
+    // Pass-through method for getting the vending machine's inventory
     @Override
     public Map<String, VendingItem> getInventory() {
         return dao.getInventory();
     }
 
+    // Increases the userBalance by addition only if addition is a positive value
+    // Throws the following exceptions:
+    //      - NegativeDepositException if the user tries to deposit a negative amount
     @Override
     public void addBalance(String addition) throws NegativeDepositException, FileLoadingWritingException {
         BigDecimal deposit = new BigDecimal(addition);
@@ -71,11 +83,13 @@ public class VendingMachineServiceLayerFileImplementation implements VendingMach
         dao.addBalance(addition);
     }
 
+    // Pass-through method for getting the VendingMachine object
     @Override
     public VendingMachine getVendingMachine() {
         return dao.getVendingMachine();
     }
 
+    // Log a purchase to the audit file
     @Override
     public void logPurchase(String name, int quantity, String unitCost) {
         ld = LocalDateTime.now();
@@ -87,6 +101,7 @@ public class VendingMachineServiceLayerFileImplementation implements VendingMach
         auditLog.writeLogEntry(logEntry);
     }
 
+    // Log a deposit to the audit file
     @Override
     public void logDeposit(String amount) {
         ld = LocalDateTime.now();
@@ -95,7 +110,9 @@ public class VendingMachineServiceLayerFileImplementation implements VendingMach
         auditLog.writeLogEntry(logEntry);
     }
 
-
+    // Make change for userBalance
+    // Returns an array representing the number of pennies, nickels, dimes, and quarters in the format:
+    // [pennies, nickels, dimes, quarters]
     @Override
     public int[] makeChange() throws FileLoadingWritingException{
         int[] change = Change.makeChange(dao.getVendingMachine().getUserBalance());
@@ -103,6 +120,7 @@ public class VendingMachineServiceLayerFileImplementation implements VendingMach
         return change;
     }
 
+    // Log a withdrawal to the audit file
     @Override
     public void logWithdrawal(String amount) {
         ld = LocalDateTime.now();

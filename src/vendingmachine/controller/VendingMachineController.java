@@ -16,6 +16,7 @@ public class VendingMachineController {
         this.serviceLayer = servicelayer;
     }
 
+    // Method to run the vending machine
     public void run() {
         boolean keepGoing = true;
         int menuSelection;
@@ -43,6 +44,7 @@ public class VendingMachineController {
         }
     }
 
+    // Handles the purchasing process
     private void makePurchase() {
         try {
             String itemToBuyName = io.readNextInput("Please enter the name of the item you wish to purchase:");
@@ -55,6 +57,7 @@ public class VendingMachineController {
         }
     }
 
+    // Handles the depositing funds process
     private void addBalance() {
         try {
             String addedBalance = io.readNextInput("Please enter how much you would like to deposit: ");
@@ -66,6 +69,7 @@ public class VendingMachineController {
         }
     }
 
+    // Handles the user quitting the vending machine. Gives change before terminating
     private void handleQuit() throws FileLoadingWritingException {
         io.println("Making Change...");
         int[] change = serviceLayer.makeChange();
@@ -81,6 +85,8 @@ public class VendingMachineController {
         io.println("Thank you for shopping at the vending machine!");
         io.anyInputToContinue();
     }
+
+    // Displays any errors to the view
     private void displayError(String errorMessage) {
         io.println("Error: " + errorMessage);
     }

@@ -2,6 +2,7 @@ package vendingmachine.servicelayer;
 
 import java.math.BigDecimal;
 
+// Class for calculating the change required for a specific balance
 public class Change {
     private static final int GREATER_THAN = 1;
     private static final int LESS_THAN = -1;

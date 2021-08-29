@@ -4,10 +4,10 @@ public interface UserIO {
     // Method that prints a line
     void println(String msg);
 
-    // Method that prints a line and then waits for user input
+    // Method that prints a line and then waits for user input, returning user input
     String readNextInput(String msg);
 
-    // Method that waits for a user to enter an integer within a min/max bound
+    // Method that waits for a user to enter an integer within a min/max bound, returning user input
     int readIntSelection(String msg, int min, int max);
 
     // Method that pauses execution until the user provides an input
