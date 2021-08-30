@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface VendingMachineDao {
     // Add an item to the vending machine's inventory
-    public void addItem(VendingItem item);
+    public void addItem(VendingItem item) throws FileLoadingWritingException;
 
     // Make a purchase
     public void makePurchase(String itemName, int quantity) throws FileLoadingWritingException;

@@ -9,7 +9,7 @@ import java.util.*;
 
 public class VendingMachineDaoFileImplementation implements VendingMachineDao {
     private static final String DELIMITER = "::";
-    private static final String FILE_NAME = "vendingmachine_inventory.txt";
+    private String FILE_NAME = "vendingmachine_inventory.txt";
 
     private VendingMachine vendingMachine;
 
@@ -18,10 +18,17 @@ public class VendingMachineDaoFileImplementation implements VendingMachineDao {
         this.loadVendingMachine();
     }
 
+    // Constructor that loads VendingMachine object from a custom file
+    public VendingMachineDaoFileImplementation(String filepath) throws FileLoadingWritingException {
+        this.FILE_NAME = filepath;
+    }
+
     // Add an item to the vending machine's inventory
     @Override
-    public void addItem(VendingItem item) {
+    public void addItem(VendingItem item) throws FileLoadingWritingException{
+        this.loadVendingMachine();
         this.vendingMachine.getInventory().put(item.getName(), item);
+        this.saveVendingMachine();
     }
 
     // Make a purchase by finding the item in the vending machine's inventory with the matching itemName, and then

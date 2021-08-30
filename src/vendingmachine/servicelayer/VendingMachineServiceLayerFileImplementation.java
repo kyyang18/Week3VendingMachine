@@ -23,9 +23,15 @@ public class VendingMachineServiceLayerFileImplementation implements VendingMach
         this.auditLog = new AuditLog();
     }
 
+    // Constructor to create a DAO object with a custom filepath
+    public VendingMachineServiceLayerFileImplementation(String filepath) throws FileLoadingWritingException, IOException {
+        this.dao = new VendingMachineDaoFileImplementation(filepath);
+        this.auditLog = new AuditLog();
+    }
+
     @Override
     // Pass-through method for adding an item to the vending machine's inventory
-    public void addItem(VendingItem item) {
+    public void addItem(VendingItem item) throws FileLoadingWritingException {
         this.dao.addItem(item);
     }
 
@@ -49,7 +55,7 @@ public class VendingMachineServiceLayerFileImplementation implements VendingMach
             throw new ItemOutOfStockException("Item is completely out of stock");
         }
         else if (itemToBuy.getQuantity() - quantity < 0) {
-            throw new ItemNotFoundException("Not enough quantity to fulfill transaction - transaction not processed");
+            throw new ItemOutOfStockException("Not enough quantity to fulfill transaction - transaction not processed");
         } else {
             BigDecimal cost = itemToBuy.getCost().multiply(new BigDecimal(quantity));
             // Check if user has sufficient funds to complete transactions

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface VendingMachineServiceLayer {
     // Add an item to the vending machine
-    public void addItem(VendingItem item);
+    public void addItem(VendingItem item) throws FileLoadingWritingException;
 
     // Make a purchase, only performing transaction if the item exists, is in stock, and the user has enough
     // money to perform the transaction

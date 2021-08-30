@@ -25,7 +25,11 @@ public class VendingMachineConsoleView {
     public void printVendingMachineInventory(VendingMachine vendingMachine) {
         io.println(String.format("|%-20s| |%-20s| |%-20s|", "Name", "Price", "Quantity Available"));
         for (VendingItem item : vendingMachine.getInventory().values()) {
-            this.printVendingItem(item);
+            if (item.getQuantity() == 0) {
+                continue;
+            } else {
+                this.printVendingItem(item);
+            }
         }
     }
 
